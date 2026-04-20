@@ -114,7 +114,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
       if (url && container) {
         // Se agregó el ROOT_PATH que faltaba aquí
-        fetch(ROOT_PATH + url)
+        fetch(url)
           .then(response => {
               if (!response.ok) throw new Error('Error de red');
               return response.text();
