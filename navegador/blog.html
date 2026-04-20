@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Blog Educativo - Laura Caviedes</title>
+  <link rel="stylesheet" href="../CSS/style.css">
+  <link rel="stylesheet" href="../CSS/normalize.css">
+  <link rel="icon" type="image/png" href="../favicon.png" />
+  <script>
+    MathJax = {
+      tex: { inlineMath: [['$', '$'], ['\\(', '\\)']] },
+      svg: { fontCache: 'global' }
+    };
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+</head>
+<body>
+  <div id="navbar"></div> 
+
+  <header class="section">
+    <h1>Blog de Física</h1>
+    <p class="subtitle">  </p>
+  </header>
+  <section class="blog-layout">
+    <aside class="sidebar">
+      <h3>Temas</h3>
+      <ul class="nav-links-blog">
+        <li><a href="#" data-articulo="../Articles-blog/articulo1.html">▸ ¿Qué son las partículas fundamentales?</a></li>
+        <li><a href="#" data-articulo="../Articles-blog/articulo2.html">▸ El sonido</a></li>
+        <li><a href="#" data-articulo="../Articles-blog/articulo3.html">▸ Aerodinámica en los Autos de Carrera</a></li>
+        <li><a href="#" data-articulo="../Articles-blog/articulo4.html">▸ Abrebocas: Colisiones de Partículas en el CERN y su Detección en ATLAS</a></li>
+        <li>▸ Programación</li>
+      </ul>
+    </aside>
+    <main class="blog-content" id="blog-article-container">
+
+    </main>
+  </section>
+
+  <section class="section cta-final">
+    <h2>¿Tienes un tema que te gustaría que aborde?</h2>
+    <div id="contacto-formulario" class="contacto-form">
+      <div id="formulario"></div>
+      <p style="margin-top: 1rem; font-style: italic; display: none;" id="mensaje-confirmacion">
+        ¡Gracias por escribirme! Te responderé pronto con todo el gusto.
+      </p>
+    </div>
+    <a class="btn btn-toggle" onclick="toggleFormulario('contacto-formulario')">Escríbeme →</a>
+  </section>
+
+  <script>
+    const ROOT_PATH = "../"; 
+  </script>
+  
+  <script src="../main.js"></script>
+  <script src="../voice_espectrometer.js"></script>
+</body>
+</html>

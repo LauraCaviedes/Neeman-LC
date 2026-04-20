@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Proyectos - Laura Caviedes</title>
+  <link rel="stylesheet" href="../CSS/style.css">
+  <link rel="stylesheet" href="../CSS/normalize.css">
+  <link rel="icon" type="image/png" href="../favicon.png" />
+</head>
+<body>
+  <div id="navbar"></div> 
+
+  <header class="section">
+    <h1>Proyectos y exploraciones científicas</h1>
+    <p class="subtitle">Investigación aplicada, simulaciones y ciencia que transforma el entorno.</p>
+  </header>
+
+  <section class="section filter-bar">
+    <a href="#fisica" class="btn">Física de partículas</a>
+    <a href="#simulaciones" class="btn">Simulaciones</a>
+    <a href="#aplicada" class="btn">Ciencia aplicada</a>
+  </section>
+
+  <section id="fisica" class="section">
+    <h2>Física de partículas y ATLAS</h2>
+    <div class="card-container">
+      <div class="project-card">
+        <h3>Calibración del NN-JVT tagger </h3>
+        <p>Calibración del NN-JVT tagger para datos del Run 2 y Run 3 medidos por el experimento ATLAS utilizando eventos Z→\mu\mu.</p>
+        <p>Trabajo técnico aprobado por la colaboración ATLAS.</p>
+        <a href="https://repositorio.unal.edu.co/handle/unal/87562" class="btn">Ver más →</a>
+      </div>
+      <div class="project-card">
+        <h3>Producción VH→qqbb con técnicas de Machine Learning</h3>
+        <p>Optimización de la selección de eventos para el canal VH→qqbb comparando modelos como BDT y MPL.</p>
+        <p>Aporte a investigación - trabajo colaborativo.</p>
+        <a href="https://indico.global/event/8704/contributions/83901/attachments/38686/72116/Presentacion%20COMHEP%202022.pdf" class="btn">Ver más →</a>
+      </div>
+      <div class="project-card">
+        <h3>Calibración del Xto bb tagger con eventos Z→bb</h3>
+        <p>Optimización de selección de eventos para la calibración del tagger Xto bb usando eventos Z→bb y automatización del framework de análisis.</p>
+        <p>Aporte a investigación - trabajo colaborativo.</p>
+        <a href="https://indico.global/event/8701/contributions/83738/" class="btn">Ver más →</a>
+      </div>
+      <div class="project-card">
+        <h3>Búsqueda del Higgs en canal H→μμ (OpenData ATLAS)</h3>
+        <p>Análisis de datos abiertos para identificar eventos compatibles con el decaimiento del bosón de Higgs en dos muones.</p>
+        <p>Trabajo desarrollado en equipo.</p>
+        <a href="https://github.com/ljcaviedesb/HiggsToMuMu" class="btn">Ver más →</a>
+      </div>
+    </div>
+  </section>
+
+  <section id="simulaciones" class="section">
+    <h2>Simulación y ciencia ambiental</h2>
+    <div class="card-container">
+      <div class="project-card">
+        <h3>Simulación del viento solar y campo magnético terrestre</h3>
+        <p>Modelado de trayectorias de partículas cargadas del viento solar interactuando con el campo magnético terrestre.</p>
+        <p>Trabajo desarrollado en equipo.</p>
+        <a href="#" class="btn">Ver más →</a>
+      </div>
+      <div class="project-card">
+        <h3>Simulación de contaminación del aire en Bogotá</h3>
+        <p>Simulación de dispersión de contaminantes atmosféricos urbanos para visualizar zonas críticas.</p>
+        <p>Trabajo desarrollado en equipo.</p>
+        <a href="https://github.com/ljcaviedesb/DistribucionContaminacionAireBogota" class="btn">Ver más →</a>
+      </div>
+    </div>
+  </section>
+
+  <section id="aplicada" class="section">
+    <h2>Ciencia aplicada y tecnologías emergentes</h2>
+    <div class="card-container">
+      <div class="project-card">
+        <h3>Reconocimiento facial con cámaras infrarrojas</h3>
+        <p>Análisis de técnicas de correlación para reconocimiento facial en condiciones de baja luz utilizando imágenes infrarrojas.</p>
+        <p>Trabajo desarrollado en equipo.</p>
+        <a href="https://github.com/ljcaviedesb/Imagenes-Termicas" class="btn">Ver más →</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="section cta-final">
+    <h2>¿Quieres saber más sobre alguno de estos proyectos o colaborar en uno similar?</h2>
+    <div id="contacto-formulario" class="contacto-form">
+      <div id="formulario"></div>
+      <p style="margin-top: 1rem; font-style: italic; display: none;" id="mensaje-confirmacion">
+        ¡Gracias por escribirme! Te responderé pronto con todo el gusto.
+      </p>
+    </div>
+    <a class="btn btn-toggle" onclick="toggleFormulario('contacto-formulario')">Escríbeme →</a>
+  </section>
+  <script>
+    const ROOT_PATH = "../"; 
+  </script>
+  <script src="../main.js"></script>
+</body>
+</html>
