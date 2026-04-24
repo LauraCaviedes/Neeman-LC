@@ -902,3 +902,41 @@ h1 {
   font-weight: 500;
   color: var(--botones_secundarios);
 }
+
+/* ==========================================
+   ESTILOS PARA IMÁGENES CON REFERENCIA
+========================================== */
+
+.figure-destacada {
+  margin: 2.5rem 0; /* Da espacio para que respire dentro del artículo */
+  padding: 0;
+  text-align: center; /* Centra la imagen y el texto de la fuente */
+}
+
+/* Ajustamos tu clase actual para que se integre bien dentro del figure */
+.figure-destacada .featured-img {
+  margin: 0 0 0.8rem 0; /* Quitamos el margen superior y dejamos un poquito abajo */
+  box-shadow: 0 8px 25px rgba(0,0,0,0.04); /* Le damos esa sombra difusa sutil */
+}
+
+/* El texto de la fuente (figcaption) */
+.figure-destacada figcaption {
+  font-family: 'Lora', serif; /* Usamos la fuente académica */
+  font-size: 0.85rem;
+  font-style: italic;
+  color: var(--subtitulo); /* El gris cálido */
+  letter-spacing: 0.3px;
+}
+
+/* El enlace dentro de la fuente */
+.figure-destacada figcaption a {
+  color: var(--botones_secundarios); /* El tono lavanda apagado */
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.3s ease;
+}
+
+.figure-destacada figcaption a:hover {
+  color: var(--oscuro);
+  text-decoration: underline;
+}
