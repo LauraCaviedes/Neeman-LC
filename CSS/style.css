@@ -815,8 +815,9 @@ h1 {
     order: -1; /* Hace que el sidebar quede antes que el contenido */
   }
 }
+
  /* Estilo de tabla */
- .tabla-scroll {
+.tabla-scroll {
   overflow-x: auto;
   margin: 1.5rem 0;
 }
@@ -939,4 +940,80 @@ h1 {
 .figure-destacada figcaption a:hover {
   color: var(--oscuro);
   text-decoration: underline;
+}
+
+/* ==========================================
+   AJUSTES FINALES PARA CELULARES Y TABLETS
+   (Siempre debe ir al final del archivo)
+========================================== */
+
+/* Ajuste intermedio para Tablets y celulares horizontales */
+@media screen and (max-width: 780px) {
+  .blog-layout {
+    display: flex;
+    flex-direction: column;
+    padding: 1rem;
+  }
+
+  .sidebar {
+    order: -1; /* Hace que el menú de temas quede arriba del artículo */
+    max-width: 100%;
+  }
+
+  .blog-content {
+    max-width: 100%;
+  }
+}
+
+/* Ajustes estrictos para Celulares (Mobile Friendly) */
+@media screen and (max-width: 560px) {
+  
+  /* Ajustamos el contenedor para que no deje márgenes muertos */
+  .blog-layout {
+    padding: 1rem 0.5rem;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  /* Reducimos el padding interno del artículo para ganar espacio */
+  .blog-content {
+    padding: 1.5rem 1rem;
+    border-radius: 8px;
+  }
+
+  .blog-content p, 
+  .blog-content li {
+    word-break: break-word; /* Evita que palabras muy largas rompan la pantalla */
+    font-size: 0.95rem; 
+  }
+
+  /* Evitamos que las imágenes se salgan de la pantalla */
+  .blog-content img,
+  .figure-destacada img {
+    max-width: 100%;
+    height: auto;
+  }
+
+  /* --- DOMANDO LAS TABLAS REBELDES --- */
+  
+  /* Le quitamos el margen del 20% para que use todo el ancho en celular */
+  .tabla-voces {
+    width: 100%;
+    margin: 1rem 0;
+  }
+
+  /* Reducimos el ancho mínimo forzado */
+  .tabla-grande th:last-child,
+  .tabla-grande td:last-child {
+    min-width: 120px; 
+  }
+
+  /* Hacemos que cualquier tabla larga se pueda deslizar con el dedo */
+  .tabla-scroll {
+    width: 100%;
+    overflow-x: auto;
+    display: block; 
+    -webkit-overflow-scrolling: touch; 
+    margin: 1rem 0;
+  }
 }
