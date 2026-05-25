@@ -1,142 +1,156 @@
-function initSpectrometer() {
-  const toggleButton = document.getElementById("toggleButton");
+// Ya no usamos DOMContentLoaded ni bloqueamos el script al inicio.
+// Las variables se quedan arriba esperando a ser llamadas.
+let audioContext;
+let analyser;
+let microphone;
+let dataArray;
+let animationId;
+let mediaStream;
+let running = false;
+
+const NOTES = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"];
+
+function freqToNote(freq) {
+  if (!freq || freq <= 0) return "--"; 
+  const A4 = 440;
+  const semitones = 12 * Math.log2(freq / A4);
+  const midi = Math.round(semitones) + 69;
+  
+  if (midi < 0 || midi > 127) return "--"; 
+  
+  const note = NOTES[midi % 12];
+  const octave = Math.floor(midi / 12) - 1;
+  return `${note}${octave}`;
+}
+
+function startAnalyzer(toggleButton) {
+  // Buscamos el canvas dinámicamente cada vez que se presiona el botón
   const canvas = document.getElementById("spectrumCanvas");
-  const ctx = canvas.getContext("2d");
   const noteDisplay = document.getElementById("noteDisplay");
-
-  let audioContext;
-  let analyser;
-  let microphone;
-  let dataArray;
-  let animationId;
-  let mediaStream;
-
-  const NOTES = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"];
-
-  function freqToNote(freq) {
-    if (!freq || freq <= 0) return "--"; 
-    const A4 = 440;
-    const semitones = 12 * Math.log2(freq / A4);
-    const midi = Math.round(semitones) + 69;
-    
-    if (midi < 0) return "--"; 
-    
-    const note = NOTES[midi % 12];
-    const octave = Math.floor(midi / 12) - 1;
-    return `${note}${octave}`;
+  
+  if (!canvas) {
+    console.error("Error: No se encontró el elemento <canvas>");
+    return;
   }
+  const ctx = canvas.getContext("2d");
 
-  function startAnalyzer() {
-    audioContext = new (window.AudioContext || window.webkitAudioContext)();
-    analyser = audioContext.createAnalyser();
-    
-    // Mantenemos una resolución alta
-    analyser.fftSize = 16384; 
+  audioContext = new (window.AudioContext || window.webkitAudioContext)();
+  analyser = audioContext.createAnalyser();
+  analyser.fftSize = 8192; 
 
-    navigator.mediaDevices.getUserMedia({ audio: true })
-      .then(stream => {
-        mediaStream = stream;
-        microphone = audioContext.createMediaStreamSource(stream);
-        microphone.connect(analyser);
+  navigator.mediaDevices.getUserMedia({ audio: true })
+    .then(stream => {
+      mediaStream = stream;
+      microphone = audioContext.createMediaStreamSource(stream);
+      microphone.connect(analyser);
 
-        dataArray = new Uint8Array(analyser.frequencyBinCount);
+      dataArray = new Uint8Array(analyser.frequencyBinCount);
 
-        function draw() {
-          analyser.getByteFrequencyData(dataArray);
+      function draw() {
+        if (!audioContext || audioContext.state === "closed") return;
 
-          ctx.fillStyle = "black";
-          ctx.fillRect(0, 0, canvas.width, canvas.height);
+        analyser.getByteFrequencyData(dataArray);
 
-          const barWidth = (canvas.width / dataArray.length) * 10; 
-          let maxAmp = 0;
-          let maxIndex = 0;
+        ctx.fillStyle = "black";
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-          // Buscar el índice con la máxima amplitud
-          // Empezamos en 1 y terminamos un índice antes para asegurar que existen vecinos
-          for (let i = 1; i < dataArray.length - 1; i++) {
-            if (dataArray[i] > maxAmp) {
-              maxAmp = dataArray[i];
-              maxIndex = i;
-            }
-            
-            const x = i * barWidth;
-            if (x < canvas.width) {
-              const barHeight = dataArray[i];
-              ctx.fillStyle = "lime";
-              ctx.fillRect(x, canvas.height - barHeight, barWidth, barHeight);
-            }
+        const barsToDraw = Math.min(dataArray.length, 500); 
+        const barWidth = canvas.width / barsToDraw; 
+        
+        let maxAmp = 0;
+        let maxIndex = 0;
+
+        for (let i = 1; i < dataArray.length - 1; i++) {
+          if (dataArray[i] > maxAmp) {
+            maxAmp = dataArray[i];
+            maxIndex = i;
           }
-
-          let freqBin = 0;
-
-          // Aplicar la interpolación cuadrática solo si hay suficiente volumen
-          if (maxAmp > 100 && maxIndex > 0 && maxIndex < dataArray.length - 1) {
-            const y1 = dataArray[maxIndex - 1]; // Vecino izquierdo
-            const y2 = dataArray[maxIndex];     // Pico discreto
-            const y3 = dataArray[maxIndex + 1]; // Vecino derecho
-
-            // Desfase 'p' para encontrar el vértice de la parábola
-            let p = 0;
-            const denominador = 2 * (y1 - 2 * y2 + y3);
-            if (denominador !== 0) {
-                p = (y1 - y3) / denominador;
-            }
-
-            // Índice exacto interpolado
-            const interpolatedIndex = maxIndex + p;
-            
-            // Frecuencia final de alta precisión
-            freqBin = interpolatedIndex * audioContext.sampleRate / analyser.fftSize;
-
-            // Filtrar ruido de bajas frecuencias
-            if (freqBin > 50) {
-              noteDisplay.textContent = `Nota: ${freqToNote(freqBin)} (${freqBin.toFixed(2)} Hz)`;
-            } else {
-              noteDisplay.textContent = "Nota: --";
-            }
-          } else {
-            noteDisplay.textContent = "Nota: --";
+          
+          if (i < barsToDraw) {
+            const barHeight = (dataArray[i] / 255) * canvas.height;
+            ctx.fillStyle = "lime";
+            ctx.fillRect(i * barWidth, canvas.height - barHeight, barWidth - 1, barHeight);
           }
-
-          animationId = requestAnimationFrame(draw);
         }
 
-        draw();
-      })
-      .catch(err => {
-        console.error("Error accediendo al micrófono:", err);
-        alert("No se pudo acceder al micrófono.");
-      });
+        let freqBin = 0;
+
+        if (maxAmp > 110 && maxIndex > 0 && maxIndex < dataArray.length - 1) {
+          const y1 = dataArray[maxIndex - 1]; 
+          const y2 = dataArray[maxIndex];     
+          const y3 = dataArray[maxIndex + 1]; 
+
+          let p = 0;
+          const denominador = 2 * (y1 - 2 * y2 + y3);
+          if (denominador !== 0) {
+            p = (y1 - y3) / denominador;
+          }
+
+          const interpolatedIndex = maxIndex + p;
+          freqBin = interpolatedIndex * audioContext.sampleRate / analyser.fftSize;
+
+          if (freqBin > 65 && freqBin < 1200) {
+            if (noteDisplay) noteDisplay.textContent = `Nota: ${freqToNote(freqBin)} (${freqBin.toFixed(2)} Hz)`;
+          } else if (noteDisplay) {
+            noteDisplay.textContent = "Nota: --";
+          }
+        } else if (noteDisplay) {
+          noteDisplay.textContent = "Nota: --";
+        }
+
+        animationId = requestAnimationFrame(draw);
+      }
+
+      draw();
+    })
+    .catch(err => {
+      console.error("Error accediendo al micrófono:", err);
+      alert("No se pudo acceder al micrófono. Asegúrate de dar los permisos.");
+      running = false;
+      toggleButton.textContent = "🎤 Empezar Análisis";
+    });
+}
+
+function stopAnalyzer() {
+  if (animationId) {
+    cancelAnimationFrame(animationId);
+    animationId = null;
+  }
+  if (audioContext) {
+    audioContext.close();
+    audioContext = null;
+  }
+  if (mediaStream) {
+    mediaStream.getTracks().forEach(track => track.stop());
+    mediaStream = null;
   }
 
-  function stopAnalyzer() {
-    if (animationId) {
-      cancelAnimationFrame(animationId);
-      animationId = null;
-    }
-    if (audioContext) {
-      audioContext.close();
-      audioContext = null;
-    }
-    if (mediaStream) {
-      mediaStream.getTracks().forEach(track => track.stop());
-      mediaStream = null;
-    }
-
+  const canvas = document.getElementById("spectrumCanvas");
+  if (canvas) {
+    const ctx = canvas.getContext("2d");
     ctx.fillStyle = "black";
     ctx.fillRect(0, 0, canvas.width, canvas.height);
+  }
+  
+  const noteDisplay = document.getElementById("noteDisplay");
+  if (noteDisplay) {
     noteDisplay.textContent = "Nota: --";
   }
+}
 
-  let running = false;
-  toggleButton.addEventListener("click", () => {
+// DELEGACIÓN DE EVENTOS: Escuchamos clics en TODO el documento
+document.addEventListener("click", (event) => {
+  // Verificamos si el elemento clicado (o su contenedor) es nuestro botón
+  if (event.target && event.target.id === "toggleButton") {
+    const toggleButton = event.target;
+    
     if (!running) {
-      startAnalyzer();
+      startAnalyzer(toggleButton);
       toggleButton.textContent = "⏹️ Detener Análisis";
     } else {
       stopAnalyzer();
       toggleButton.textContent = "🎤 Empezar Análisis";
     }
     running = !running;
-  });
-}
+  }
+});
