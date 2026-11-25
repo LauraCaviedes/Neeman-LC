@@ -47,7 +47,7 @@ body {
 /* Le damos la vibra académica a todos los títulos */
 h1, h2, h3, .logo {
   font-family: 'Lora', serif;
-  font-weight: 400;
+  font-weight: 300;
   color: var(--titulo);
   letter-spacing: -0.5px; /* Le da un toque muy editorial */
 }
